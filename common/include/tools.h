@@ -54,9 +54,9 @@ public:
         memset(buffer,0,buf_size);
         memcpy(buffer,time,strlen(time));
         int i;
-        for( i=0;buffer[i]!='\n';i++)
-            ;
-        buffer[i]='\0';
+//        for( i=0;buffer[i]!='\n';i++)
+//            ;
+//        buffer[i]='\0';
 
         //   cout<<"("<<buf<<")"<<'['<<line_no<<']'<<'['<<func_name<<']'<<'['<<file_name<<']'<<'['<<buffer<<']'<<'['<<label<<']'<<endl;
         //  cout<<"("<<buf<<")"<<'['<<line_no<<']'<<'['<<func_name<<']'<<'['<<file_name<<']'<<'['<<buffer<<']'<<'['<<label<<']'<<endl;
@@ -70,13 +70,27 @@ public:
 #endif
         cout<<last_substr(fn,t).data()<<"(line"<<line_no<<")"<<":"<<buf<<endl;
 #endif
-        cout<<last_substr(last_substr(fn,'/'),'\\').data()<<"(line"<<line_no<<")"<<":"<<buf<<endl;
+   //     cout<<last_substr(last_substr(fn,'/'),'\\').data()<<"(line"<<line_no<<")"<<":"<<buf<<endl;
+         cout<<"["<<time<<"]["<<label<<"]["<<last_substr(last_substr(fn,'/'),'\\').data()<<":("<<line_no<<")===>"<<buf<<endl;
+        fflush(NULL);
     }
-    inline static char* get_time()
+    inline static char* get_time_n()
     {
         chrono::system_clock::time_point today= chrono::system_clock::now();
         time_t tt= chrono::system_clock::to_time_t(today);
         return ctime(&tt);
+    }
+    inline static string get_time()
+    {
+        chrono::system_clock::time_point today= chrono::system_clock::now();
+        time_t tt= chrono::system_clock::to_time_t(today);
+        string tm(ctime(&tt));
+        int pos=tm.find('\n');
+        if(pos!=string::npos){
+            tm[pos]=0;
+        }
+
+        return tm;
     }
     static void init(const char *)
     {
@@ -97,7 +111,7 @@ public:
     }
 };
 #define prt(label,...) {Tools::lock.lock(); Tools::init("log.txt"); char buf[1000];sprintf(buf,__VA_ARGS__);\
-    Tools::prt(buf,__LINE__,__FUNCTION__,__FILE__,#label,Tools::get_time());Tools::lock.unlock();}
+    Tools::prt(buf,__LINE__,__FUNCTION__,__FILE__,#label,Tools::get_time().data());Tools::lock.unlock();}
 
 
 #define THREAD_DEF(cls,fun) new thread(std::mem_fn(&cls::fun),*(cls*)this);

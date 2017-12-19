@@ -1,9 +1,5 @@
 {
     "camera": [
-        {
-            "ip": "test1.264",
-            "port": 554
-        }
     ],
-    "camera_total_number": 1
+    "camera_total_number": 0
 }
